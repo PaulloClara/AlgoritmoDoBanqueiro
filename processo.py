@@ -7,21 +7,27 @@ class Processo(object):
     self.__recursosAlocados = []
     self.__recursosMaximos = []
     self.__recursosNecessarios = []
+    self.__verificado = False
 
-  def init(self, tituloDosRecursos):
-    print('\n\t\t=-=-=-=-=-=-=-=-=-=', end='')
-    self.__titulo = input('\n\t\tTitulo do processo\n\t\t> ')
-    print('\n\t\t=-=-=-=-=-=-=-=-=-=', end='')
-    print('\n\n\t\t=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=', end='')
+  def run(self):
+    self.__verificado = True
+    return self.__recursosAlocados
+
+  def status(self):
+    return self.__verificado
+
+  def init(self, tituloDoProcesso, tituloDosRecursos):
+    self.__titulo = tituloDoProcesso
+    print('\n\n\t\t=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=', end='')
     for titulo in tituloDosRecursos:
       self.__recursosMaximos.append(Recurso())
-      self.__recursosMaximos[-1].init(titulo, f'necessario para o processo {self.__titulo}')
-    print('\n\t\t=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=', end='')
-    print('\n\n\t\t=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=', end='')
+      self.__recursosMaximos[-1].init(titulo, f'máximo para o processo {self.__titulo}')
+    print('\n\t\t=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=', end='')
+    print('\n\n\t\t=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=', end='')
     for titulo in tituloDosRecursos:
       self.__recursosAlocados.append(Recurso())
       self.__recursosAlocados[-1].init(titulo, f'alocado para o processo {self.__titulo}')
-    print('\n\t\t=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n\n')
+    print('\n\t\t=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n')
     for index in range(len(tituloDosRecursos)):
       self.__recursosNecessarios.append(Recurso())
       quantidade = self.__recursosMaximos[index].obterQuantidade()

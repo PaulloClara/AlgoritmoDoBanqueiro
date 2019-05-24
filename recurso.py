@@ -3,6 +3,9 @@ class Recurso(object):
     self.__titulo = ''
     self.__quantidade = 0
 
+  def add(self, quantidade):
+    self.__quantidade += quantidade
+
   def init(self, titulo, msg='', quantidade='0'):
     self.__titulo = titulo
     if quantidade == '0':
