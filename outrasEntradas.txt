@@ -1,35 +1,51 @@
 Ordem ->  Quantidade de Recursos
-
-          Titulo do Recurso disponivel
-            Quantidade
+          Titulo de cada um dos Recursos
+          Quantidade de cada recurso
 
           Quantidade de Processos
-
-          Titulo do Processo
-            Titulo do Recurso necessario
-              Quantidade
-
-          Titulo do Recurso alocado
-            Quantidade
-
+          Titulo de cada um dos Processos
+          Quantidade de cada Recurso Máximo
+          Quantidade de cada Recurso Alocado
 
 -------------------------------------------------
 4
 A
-3
 B
-1
 C
-1
 D
+3
+1
+1
 2
 3
 P1
-A
+P2
+P3
 3
-B
 3
-C
 2
-D
 2
+1
+2
+2
+1
+1
+2
+3
+4
+1
+0
+3
+3
+1
+1
+5
+0
+1
+1
+1
+0
+
+Estado -> Seguro
+
+-------------------------------------------------
