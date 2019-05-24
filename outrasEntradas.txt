@@ -1,0 +1,35 @@
+Ordem ->  Quantidade de Recursos
+
+          Titulo do Recurso disponivel
+            Quantidade
+
+          Quantidade de Processos
+
+          Titulo do Processo
+            Titulo do Recurso necessario
+              Quantidade
+
+          Titulo do Recurso alocado
+            Quantidade
+
+
+-------------------------------------------------
+4
+A
+3
+B
+1
+C
+1
+D
+2
+3
+P1
+A
+3
+B
+3
+C
+2
+D
+2
