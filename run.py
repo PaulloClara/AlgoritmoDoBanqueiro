@@ -1,48 +1,36 @@
-from processo import Processo
+from console import Console
 from recurso import Recurso
+from processo import Processo
 
 
 class App(object):
   def __init__(self):
-    self.recursosDisponiveis = []
+    self.console = Console()
+    self.processos = []
+    self.ordemDeExecucao = []
     self.tituloDosRecursos = []
     self.tituloDosProcessos = []
-    self.processos = []
+    self.recursosDisponiveis = []
     self.estado = 'Seguro'
+    self.executando = True
 
   def run(self):
-    self.quebraDeLinha(5)
-    self.preencherRecursosDisponiveis()
+    self.console.quebraDeLinha(2)
+    self.criarRecursosDisponiveis()
     self.criarProcessos()
     self.mostrarTabelaDeRecursos('Alocados')
+    self.console.quebraDeLinha(2)
     self.mostrarTabelaDeRecursos('Maximos')
+    self.console.quebraDeLinha(2)
     self.mostrarTabelaDeRecursosDisponiveis()
+    self.console.quebraDeLinha(2)
     self.mostrarTabelaDeRecursos('Necessarios')
+    self.console.quebraDeLinha(2)
     self.verificarEstado()
     self.mostrarEstado()
-    self.quebraDeLinha(2)
-
-  def preencherRecursosDisponiveis(self):
-    print('\t\t=-=-=-=-=-=-=-=-=-=-=-=')
-    for index in range(int(input('\t\tQuantidade de recursos\n\t\t> '))):
-      self.tituloDosRecursos.append(input(f'\n\t\tTitulo do recurso {index+1}\n\t\t> '))
-    print('\n\t\t=-=-=-=-=-=-=-=-=-=-=-=')
-    print('\n\n\t\t=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=', end='')
-    for titulo in self.tituloDosRecursos:
-      self.recursosDisponiveis.append(Recurso())
-      self.recursosDisponiveis[-1].init(titulo, 'disponivel')
-    print('\n\t\t=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
-
-  def criarProcessos(self):
-    self.quebraDeLinha(1)
-    print('\t\t=-=-=-=-=-=-=-=-=-=-=')
-    quantidadeDeProcessos = int(input('\t\tQuantos processos\n\t\t> '))
-    for index in range(quantidadeDeProcessos):
-      self.tituloDosProcessos.append(input(f'\n\t\tTitulo do processo {index+1}\n\t\t> '))
-    print('\n\t\t=-=-=-=-=-=-=-=-=-=-=')
-    for index in range(quantidadeDeProcessos):
-      self.processos.append(Processo())
-      self.processos[-1].init(self.tituloDosProcessos[index], self.tituloDosRecursos)
+    self.console.quebraDeLinha(2)
+    self.console.mostrar(' -> '.join(self.ordemDeExecucao))
+    self.console.quebraDeLinha(2)
 
   def verificarEstado(self):
     continuar = True
@@ -52,57 +40,86 @@ class App(object):
       for processo in self.processos:
         if processo.status():
           continue
-        recursosDoProcesso = processo.obterRecursos('Necessarios')
-        for index in range(len(self.tituloDosRecursos)):
-          if self.recursosDisponiveis[index].obterQuantidade() >= recursosDoProcesso[index].obterQuantidade():
+        recursosDoProcesso = processo.recursos('Necessarios')
+        quantidadeDeRecursos = len(self.tituloDosRecursos)
+        for index in range(quantidadeDeRecursos):
+          quantidadeDeRecursosDisponivel = self.recursosDisponiveis[index].quantidade()
+          if quantidadeDeRecursosDisponivel >= recursosDoProcesso[index].quantidade():
             processoOK = True
           else:
             processoOK = False
             break
         if processoOK:
+          self.ordemDeExecucao.append(processo.titulo())
           recursosLiberados = processo.run()
           for index in range(len(self.recursosDisponiveis)):
-            self.recursosDisponiveis[index].add(recursosLiberados[index].obterQuantidade())
+            self.recursosDisponiveis[index].add(recursosLiberados[index].quantidade())
           quantidadeDeProcessosOK += 1
           continuar = True
           break
 
   def mostrarTabelaDeRecursosDisponiveis(self):
-    self.quebraDeLinha(1)
-    quantidades = ''
+    self.console.quebraDeLinha(1)
+    linha = '  '
     for recurso in self.recursosDisponiveis:
-      quantidades += str(recurso.obterQuantidade()) + ' '
-    print('\t\t\tRecursos Disponiveis')
-    print('\t\t\t=-=-=-=-=-=-=-=-=-=-=')
-    print(f'\t\t\t{" ".join(self.tituloDosRecursos)}')
-    print(f'\t\t\t{quantidades}')
-    print('\t\t\t=-=-=-=-=-=-=-=-=-=-=')
+      linha += str(recurso.quantidade()) + '  '
+    self.console.mostrar('Recursos Disponiveis', t='\t\t')
+    self.console.linha(14)
+    self.console.mostrar(f'  {"  ".join(self.tituloDosRecursos)}')
+    self.console.mostrar(f'{linha}')
+    self.console.linha(14)
 
   def mostrarTabelaDeRecursos(self, tipoDeRecurso):
-    self.quebraDeLinha(1)
-    print(f'\t\t\tRecursos {tipoDeRecurso}')
-    print('\t\t\t=-=-=-=-=-=-=-=-=-=-=')
-    print(f'\t\t\t   {" ".join(self.tituloDosRecursos)}')
+    self.console.quebraDeLinha(1)
+    self.console.mostrar(f'Recursos {tipoDeRecurso}', t='\t\t')
+    self.console.linha(14)
+    self.console.mostrar(f'    {"  ".join(self.tituloDosRecursos)}')
     for processo in self.processos:
-      print(f'\t\t\t{processo.obterTitulo()}', end=' ')
-      quantidades = ''
-      for recurso in processo.obterRecursos(tipoDeRecurso):
-        quantidades += str(recurso.obterQuantidade()) + ' '
-      print(f'{quantidades}')
-    print('\t\t\t=-=-=-=-=-=-=-=-=-=-=')
+      linha = processo.titulo() + '  '
+      for recurso in processo.recursos(tipoDeRecurso):
+        linha += str(recurso.quantidade()) + '  '
+      self.console.mostrar(linha)
+    self.console.linha(14)
 
   def mostrarEstado(self):
     cores = { 'S': '\033[1;32m', 'I': '\033[1;31m' }
     for processo in self.processos:
       if not processo.status():
         self.estado = 'Inseguro'
-    self.quebraDeLinha(3)
-    print('\t\t=-=-=-=-=')
-    print(f'\t\t{cores[self.estado[0]]}{self.estado}', end='\033[0;0m')
-    print('\n\t\t=-=-=-=-=')
+    self.console.linha(4)
+    self.console.mostrar(f'{cores[self.estado[0]]}{self.estado}', '\033[0;0m\n', '\t\t')
+    self.console.linha(4)
 
-  def quebraDeLinha(self, numeroDeLinhas):
-    print('\n' * numeroDeLinhas)
+  def criarRecursosDisponiveis(self):
+    self.console.linha(11)
+    numeroDeRecursos = int(self.console.obter('Quantidade de recursos'))
+    for index in range(numeroDeRecursos):
+      titulo = self.console.obter(f'Titulo do recurso {index+1}')
+      self.tituloDosRecursos.append(titulo)
+    self.console.linha(11)
+    self.console.quebraDeLinha(2)
+    self.console.linha(17)
+    for titulo in self.tituloDosRecursos:
+      pergunta = f'Quantidade de recurso "{titulo}" Disponivel'
+      quantidade = int(self.console.obter(pergunta))
+      recurso = Recurso()
+      recurso.init(titulo, quantidade)
+      self.recursosDisponiveis.append(recurso)
+    self.console.linha(17)
+
+  def criarProcessos(self):
+    self.console.quebraDeLinha(3)
+    quantidadeDeProcessos = int(self.console.obter('Quantidade de processos'))
+    self.console.linha(10)
+    for index in range(quantidadeDeProcessos):
+      titulo = self.console.obter(f'Titulo do processo {index+1}')
+      self.tituloDosProcessos.append(titulo)
+    self.console.linha(10)
+    self.console.quebraDeLinha(3)
+    for index in range(quantidadeDeProcessos):
+      processo = Processo()
+      processo.init(self.tituloDosProcessos[index], self.tituloDosRecursos)
+      self.processos.append(processo)
 
 
 if __name__ == '__main__':

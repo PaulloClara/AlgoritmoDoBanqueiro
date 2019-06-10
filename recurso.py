@@ -6,15 +6,12 @@ class Recurso(object):
   def add(self, quantidade):
     self.__quantidade += quantidade
 
-  def init(self, titulo, msg='', quantidade='0'):
+  def init(self, titulo, quantidade):
     self.__titulo = titulo
-    if quantidade == '0':
-      self.__quantidade = int(input(f'\n\t\tQuandidade de recurso {self.__titulo} {msg}\n\t\t> '))
-    else:
-      self.__quantidade = quantidade
+    self.__quantidade = quantidade
 
-  def obterTitulo(self):
+  def titulo(self):
     return self.__titulo
 
-  def obterQuantidade(self):
+  def quantidade(self):
     return self.__quantidade
