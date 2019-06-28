@@ -1,5 +1,6 @@
 Ordem ->  Quantidade de Recursos
           Titulo de cada um dos Recursos
+          Tipo de recurso (Disponivel, Existente)
           Quantidade de cada recurso
 
           Quantidade de Processos
@@ -13,6 +14,7 @@ A
 B
 C
 D
+Disponivel
 3
 1
 1
@@ -55,6 +57,7 @@ A
 B
 C
 D
+Disponivel
 3
 0
 1
@@ -95,6 +98,7 @@ Estado -> Inseguro
 A
 B
 C
+Disponivel
 3
 3
 2
@@ -136,6 +140,49 @@ P4
 2
 
 P1 -> P3 -> P0 -> P2 -> P4
+Estado -> Seguro
+
+-------------------------------------------------
+4
+A
+B
+C
+D
+Existente
+6
+4
+7
+6
+3
+P1
+P2
+P3
+3
+3
+2
+2
+1
+2
+2
+1
+1
+2
+3
+4
+1
+0
+3
+3
+1
+1
+5
+0
+1
+1
+1
+0
+
+P1 -> P2 -> P3
 Estado -> Seguro
 
 -------------------------------------------------
