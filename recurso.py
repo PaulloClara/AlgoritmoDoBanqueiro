@@ -1,17 +1,24 @@
 class Recurso(object):
   def __init__(self):
-    self.__titulo = ''
-    self.__quantidade = 0
+    self.titulo = ''
+    self.quantidadeAlocada = 0
+    self.quantidadeExistente = 0
+    self.quantidadeDisponivel = 0
+    self.tipoDeEntradaDeRecurso = ''
 
-  def add(self, quantidade):
-    self.__quantidade += quantidade
+  def adicionar(self, quantidade):
+    self.quantidadeDisponivel += quantidade
 
-  def init(self, titulo, quantidade):
-    self.__titulo = titulo
-    self.__quantidade = quantidade
+  def calcularRecursosDisponiveisOuExistentes(self):
+    if self.tipoDeEntradaDeRecurso == 'existentes':
+      self.quantidadeDisponivel = self.quantidadeExistente - self.quantidadeAlocada
+    else:
+      self.quantidadeExistente = self.quantidadeDisponivel + self.quantidadeAlocada
 
-  def titulo(self):
-    return self.__titulo
-
-  def quantidade(self):
-    return self.__quantidade
+  def init(self, titulo, quantidade, tipoDeEntradaDeRecurso):
+    self.titulo = titulo
+    self.tipoDeEntradaDeRecurso = tipoDeEntradaDeRecurso
+    if self.tipoDeEntradaDeRecurso in 'existentes':
+      self.quantidadeExistente = quantidade
+    else:
+      self.quantidadeDisponivel = quantidade
